@@ -246,10 +246,11 @@ async def ask_agent_v1(session: conversation_models.SessionPublic, db):
         messages.append(current_message)
 
     model = Ollama(
-        model="llama3.1:8b",  # local model name
+        model="qwen3:8b",  # local model name qwen3:8b
         request_timeout=360.0,
         # Manually set the context window to limit memory usage
         context_window=8000,
+        thinking=True
     )
 
     tool = FunctionTool.from_defaults(fn=search_documents_v1)

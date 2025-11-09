@@ -49,6 +49,15 @@ def search_vector_database(collection, query_embedding, top_k: int = 3):
 
 
 def search_query_pipline(query: str):
+    """
+    Get ChromaDB collection database and search for most related documents.
+
+    This section demonstrates:
+    - ChromaDB client initialization
+    - Collection initialization
+    - query embedding
+    - Vector search
+    """
     # Initialize ChromaDB client
     chroma_client = chromadb.PersistentClient("vector_db/chroma", settings=Settings(anonymized_telemetry=False))
 
