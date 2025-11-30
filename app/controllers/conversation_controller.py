@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 
-import app.models.conversation_crud as conversation_crud
+import app.services.conversation_crud as conversation_crud
 import app.models.conversation_models as conversation_models
 from uuid import UUID
 

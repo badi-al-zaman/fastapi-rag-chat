@@ -28,7 +28,7 @@ app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(session_router, tags=["Sessions | Conversations"])
 app.include_router(rag_router_v1, prefix="/v1", tags=["Rag V1: Index, Search, Ask, Chat"])
 
-from app.models.user_crud import create_user
+from app.services.user_crud import create_user
 from app.models.user_models import User, UserCreate
 from app.core.security import get_password_hash
 from sqlmodel import Session, select

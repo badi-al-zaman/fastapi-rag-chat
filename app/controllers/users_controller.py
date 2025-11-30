@@ -6,7 +6,7 @@ from app.core.db import SessionDep
 from app.core.security import get_current_active_superuser, CurrentUser, verify_password, \
     get_password_hash
 from app.models.schemas_models import Message, UpdatePassword
-import app.models.user_crud as crud
+import app.services.user_crud as crud
 from app.models.user_models import UsersPublic, User, UserPublic, UserUpdateMe, UserRegister, \
     UserUpdate
 

@@ -4,7 +4,7 @@ from llama_index.core.tools import FunctionTool
 
 from typing import List, Dict
 
-from app.models import conversation_crud
+from app.services import conversation_crud
 from app.models import conversation_models
 from app.utils.logger import logger
 from app.services.retriever_service import search_query_pipline

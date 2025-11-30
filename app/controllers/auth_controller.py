@@ -11,7 +11,7 @@ from app.core.security import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, 
     get_password_hash, get_current_active_superuser, generate_password_reset_token, \
     verify_password_reset_token
 from app.models.schemas_models import Message, NewPassword, Token
-from app.models.user_crud import authenticate_user, get_user
+from app.services.user_crud import authenticate_user, get_user
 from app.utils.smtp_utils import generate_reset_password_email, send_email
 
 router = APIRouter()

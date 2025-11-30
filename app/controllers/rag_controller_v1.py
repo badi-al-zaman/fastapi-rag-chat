@@ -11,7 +11,7 @@ from app.services.embedding_service import setup_vector_database
 from app.services.retriever_service import search_query_pipline
 from app.services.generator_service import ask_agent_v1
 from app.services.rag_service import run_complete_rag_pipeline
-import app.models.conversation_crud as conversation_crud
+import app.services.conversation_crud as conversation_crud
 from app.core.config import settings as server_settings
 
 from app.utils.logger import logger
