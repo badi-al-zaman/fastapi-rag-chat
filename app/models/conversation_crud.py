@@ -1,17 +1,20 @@
 # crud.py
+from uuid import UUID
+
 from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.conversation_models import Session as ChatSession, Message, MessageData
+from app.models.schemas_models import Message as response_message
 
 from datetime import datetime, timezone
 from fastapi import HTTPException, status
 from app.utils.logger import logger
 
 
-def create_session(db: Session, title: str = None, user_id=None, metadata=None):
+def create_session(user_id: UUID, db: Session, title: str = None, metadata=None):
     try:
-        new_session = ChatSession(title=title)  # user_id=user_id
+        new_session = ChatSession(title=title, user_id=user_id)
         db.add(new_session)
         db.commit()
         db.refresh(new_session)
@@ -33,7 +36,7 @@ def create_session(db: Session, title: str = None, user_id=None, metadata=None):
         )
 
 
-def delete_session(db: Session, session_id: str):
+def delete_session(db: Session, session_id: str) -> response_message:
     try:
         session = db.get(ChatSession, session_id)
         if not session:
@@ -43,7 +46,7 @@ def delete_session(db: Session, session_id: str):
             )
         db.delete(session)
         db.commit()
-        return {"ok": True}
+        return response_message(message="Conversation deleted successfully")
     except HTTPException:
         # Re-raise HTTPException so FastAPI can handle it properly
         db.rollback()
@@ -89,7 +92,6 @@ def get_full_session(db: Session, session_id: str):
     except SQLAlchemyError as e:
         # Optionally log e for debugging
         logger.exception(f"Unexpected error: {str(e)}")
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error while get session's messages."
@@ -103,9 +105,11 @@ def get_full_session(db: Session, session_id: str):
         )
 
 
-def get_all_sessions(db: Session, limit: int = 10):
+def get_all_sessions(user_id: UUID, db: Session, limit: int = 10):
     try:
-        sessions = db.exec(select(ChatSession).order_by(ChatSession.created_at.desc()).limit(limit)).all()
+        sessions = db.exec(
+            select(ChatSession).where(ChatSession.user_id == user_id).order_by(ChatSession.created_at.desc()).limit(
+                limit)).all()
         return sessions
     except SQLAlchemyError as e:
         logger.exception(f"Unexpected error: {str(e)}")

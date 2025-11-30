@@ -4,14 +4,13 @@ from typing import Annotated, AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel import create_engine, Session, select, SQLModel
+from sqlmodel import create_engine, Session, SQLModel
 
 from app.core.config import settings as server_settings
 
-# from app.models.user_models import User, UserCreate
-# from app.models.user_crud import create_user
 import app.models.conversation_models
 import app.models.document_models
+from app.models.user_models import User
 
 SYN_DATABASE_URI = str(server_settings.SQLALCHEMY_SYN_DATABASE_URI)
 ASYN_DATABASE_URI = str(server_settings.SQLALCHEMY_ASYN_DATABASE_URI)
@@ -32,18 +31,6 @@ def init_db() -> None:
     # make sure all SQLModel models are imported (app.models) before initializing DB
     # otherwise, SQLModel might fail to initialize relationships properly
     SQLModel.metadata.create_all(engine)
-
-    # with Session(engine) as session:
-    #     user = session.exec(
-    #         select(User).where(User.email == FIRST_SUPERUSER)
-    #     ).first()
-    #     if not user:
-    #         user_in = UserCreate(
-    #             email=FIRST_SUPERUSER,
-    #             password=FIRST_SUPERUSER_PASSWORD,
-    #         )
-    #         user = create_user(db=session, user=user_in)
-    #         print(user)
 
 
 # Step 1: Create async engine and session

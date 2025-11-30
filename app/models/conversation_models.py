@@ -1,4 +1,4 @@
-# models.py
+# schemas_models.py
 from datetime import datetime, timezone
 from typing import Optional, List
 from uuid import UUID, uuid4
@@ -18,6 +18,7 @@ class SessionCreate(SessionBase):
 
 class SessionPublic(SessionBase):
     session_id: UUID
+    user_id: UUID
     created_at: datetime
     last_active_at: datetime
     messages: List["MessagePublic"] = []
@@ -29,16 +30,16 @@ class SessionsPublic(SQLModel):
 
 class Session(SessionBase, table=True):
     session_id: UUID = Field(default_factory=uuid4, primary_key=True)
-    # user_id: UUID = Field(foreign_key="user.user_id", nullable=False, ondelete="CASCADE")
+    user_id: UUID = Field(foreign_key="user.user_id", nullable=False, ondelete="CASCADE")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc),
                                  sa_column=Column(DateTime(timezone=True)))
     last_active_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc),
                                      sa_column=Column(DateTime(timezone=True)))
 
-    # user: "User" = Relationship(back_populates="sessions")
-    messages: list["Message"] = Relationship(back_populates="session", cascade_delete=True, sa_relationship_kwargs={
+    user: "User" = Relationship(back_populates="sessions")
+    messages: list["Message"] = Relationship(back_populates="session", sa_relationship_kwargs={
         "order_by": "Message.created_at"
-    })
+    })  # cascade_delete=True,
 
 
 from enum import Enum
@@ -84,7 +85,7 @@ class Message(MessageBase, table=True):
                                  sa_column=Column(DateTime(timezone=True)))
 
     session: Session = Relationship(back_populates="messages")
-    # retrieved_docs: list["MessageRetrievedDoc"] = Relationship(back_populates="message", cascade_delete=True)
+    # retrieved_docs: list["MessageRetrievedDoc"] = Relationship(back_populates="message", ) # cascade_delete=True
 
 # class RetrievedDoc(SQLModel, table=True):
 #     retrieved_doc_id: UUID = Field(default_factory=uuid4, primary_key=True)
@@ -100,7 +101,7 @@ class Message(MessageBase, table=True):
 #         UniqueConstraint("source_doc_id", "snippet", name="uq_source_snippet"),
 #     )
 #
-#     linked_messages: list["MessageRetrievedDoc"] = Relationship(back_populates="retrieved_doc", cascade_delete=True)
+#     linked_messages: list["MessageRetrievedDoc"] = Relationship(back_populates="retrieved_doc", ) # cascade_delete=True
 #
 #
 # class MessageRetrievedDoc(SQLModel, table=True):
